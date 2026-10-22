@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="bn" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>আরবি হরফ ভিউয়ার</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      @font-face {
+        font-family: "IqraArabicFont";
+        src: url("../assets/fonts/CustomFont.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        --bg-color: #0f172a;
+        --panel-bg: rgba(30, 41, 59, 0.9);
+        --panel-border: rgba(255, 255, 255, 0.1);
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-highlight: #f59e0b;
+        --accent-blue: #60c9e6;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(
+          circle at 50% 30%,
+          #1e293b 0%,
+          #0f172a 70%
+        );
+        font-family: "Hind Siliguri", sans-serif;
+        user-select: none;
+        touch-action: pan-y;
+        color: var(--text-primary);
+      }
+
+      /* ------------------- Top Bar ------------------- */
+      .topbar {
+        width: 100%;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--panel-bg);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--panel-border);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        z-index: 200;
+        flex-shrink: 0;
+      }
+
+      .menu-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid var(--panel-border);
+        background: rgba(15, 23, 42, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .menu-btn:hover,
+      .menu-btn:focus-visible {
+        border-color: var(--accent-blue);
+        background: rgba(96, 201, 230, 0.1);
+      }
+
+      .menu-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--text-primary);
+      }
+
+      .topbar-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ------------------- Drawer ------------------- */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        z-index: 300;
+      }
+
+      .overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(300px, 82vw);
+        background: #101c31;
+        border-left: 1px solid var(--panel-border);
+        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.5);
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 400;
+        display: flex;
+        flex-direction: column;
+        padding: 22px 18px;
+        gap: 6px;
+      }
+
+      .drawer.open {
+        transform: translateX(0);
+      }
+
+      .drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--panel-border);
+      }
+
+      .drawer-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .drawer-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .drawer-close svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--text-secondary);
+      }
+
+      .drawer-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 15.5px;
+        font-weight: 500;
+        background: transparent;
+        border: 1px solid transparent;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .drawer-item .icon {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .drawer-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-primary);
+      }
+
+      .drawer-item.active {
+        background: rgba(96, 201, 230, 0.12);
+        border-color: rgba(96, 201, 230, 0.35);
+        color: var(--accent-blue);
+        font-weight: 700;
+      }
+
+      /* ------------------- Controls Panel (page 2 only) ------------------- */
+      .controls-container {
+        width: 100%;
+        padding: 14px 20px;
+        background: var(--panel-bg);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--panel-border);
+        display: none;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        z-index: 100;
+        direction: ltr;
+        flex-shrink: 0;
+      }
+
+      .controls-container.visible {
+        display: flex;
+      }
+
+      .control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .control-group label {
+        white-space: nowrap;
+      }
+
+      select {
+        padding: 8px 14px;
+        background-color: rgba(15, 23, 42, 0.8);
+        color: var(--text-primary);
+        border: 1px solid var(--panel-border);
+        border-radius: 8px;
+        font-family: "Hind Siliguri", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      select:focus,
+      select:hover {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 2px rgba(96, 201, 230, 0.2);
+      }
+
+      /* ------------------- Display Canvas Area ------------------- */
+      .display-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        position: relative;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .question-box {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(8px);
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-size: clamp(18px, 3vh, 24px);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 25px;
+        text-align: center;
+        direction: ltr;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        display: none;
+      }
+
+      .question-box.visible {
+        display: block;
+      }
+
+      #letter-display {
+        font-family: "IqraArabicFont", serif;
+        font-size: min(38vh, 310px);
+        font-weight: 700;
+        text-align: center;
+        white-space: nowrap;
+        line-height: 1.1;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      /* Word mode (28th class): smaller size so full words fit */
+      #letter-display.word-mode {
+        font-size: min(22vh, 170px);
+        padding: 0 12px;
+      }
+
+      /* Mobile: smaller base size (long words are also auto-fitted by JS) */
+      @media (max-width: 600px) {
+        #letter-display {
+          font-size: min(26vh, 190px);
+        }
+        #letter-display.word-mode {
+          font-size: min(14vh, 96px);
+        }
+      }
+
+      /* ------------------- Bottom prev / next buttons ------------------- */
+      .nav-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 28px;
+        padding: 10px 16px max(16px, env(safe-area-inset-bottom));
+        direction: ltr;
+        flex-shrink: 0;
+        z-index: 100;
+      }
+
+      .nav-btn {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        border: 1px solid var(--panel-border);
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          transform 0.1s ease;
+      }
+
+      .nav-btn:hover,
+      .nav-btn:focus-visible {
+        border-color: var(--accent-blue);
+        background: rgba(96, 201, 230, 0.12);
+      }
+
+      .nav-btn:active {
+        transform: scale(0.93);
+      }
+
+      .nav-btn svg {
+        width: 26px;
+        height: 26px;
+        stroke: var(--text-primary);
+      }
+
+      /* ------------------- Slide Animations ------------------- */
+      .slide-from-right {
+        animation: slideInFromRight 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .slide-from-left {
+        animation: slideInFromLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes slideInFromRight {
+        0% {
+          transform: translate3d(100%, 0, 0);
+          opacity: 0;
+        }
+        100% {
+          transform: translate3d(0, 0, 0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideInFromLeft {
+        0% {
+          transform: translate3d(-100%, 0, 0);
+          opacity: 0;
+        }
+        100% {
+          transform: translate3d(0, 0, 0);
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .slide-from-right,
+        .slide-from-left,
+        .drawer,
+        .overlay {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Bar -->
+    <div class="topbar">
+      <button class="menu-btn" id="menu-toggle" aria-label="মেনু খুলুন">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </button>
+      <div class="topbar-title" id="topbar-title">২৯ হরফ ভিউয়ার</div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Drawer -->
+    <nav class="drawer" id="drawer" aria-label="সাইড মেনু">
+      <div class="drawer-header">
+        <h2>মেনু</h2>
+        <button
+          class="drawer-close"
+          id="drawer-close"
+          aria-label="মেনু বন্ধ করুন"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-item active" data-page="simple">
+        <span>হরফ স্লাইডার</span>
+      </div>
+      <div class="drawer-item" data-page="advanced">
+        <span>মুরাক্কাব স্লাইডার</span>
+      </div>
+      <div class="drawer-item" data-page="class17">
+        <span>১৭তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class28">
+        <span>২৮তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class29">
+        <span>২৯তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class30">
+        <span>৩০তম ক্লাস</span>
+      </div>
+    </nav>
+
+    <!-- Position filter / range controls: only shown on "advanced" page -->
+    <div class="controls-container" id="controls-container">
+      <div class="control-group">
+        <label for="start-letter">শুরু:</label>
+        <select id="start-letter"></select>
+      </div>
+
+      <div class="control-group">
+        <label for="end-letter">শেষ:</label>
+        <select id="end-letter"></select>
+      </div>
+
+      <div class="control-group">
+        <label for="position-filter">অবস্থান:</label>
+        <select id="position-filter">
+          <option value="all">সব অবস্থান (All)</option>
+          <option value="initial">শুরুর অবস্থান (Initial)</option>
+          <option value="medial">মাঝের অবস্থান (Medial)</option>
+          <option value="final">শেষের অবস্থান (Final)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="count-select">একসাথে হরফ:</label>
+        <select id="count-select">
+          <option value="1">১টি</option>
+          <option value="2">২টি</option>
+          <option value="3">৩টি</option>
+          <option value="4">৪টি</option>
+          <option value="5">৫টি</option>
+          <option value="6">৬টি</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Main Display Area (shared by both pages) -->
+    <div class="display-container">
+      <div class="question-box" id="question-box">
+        নিচে প্রদর্শিত হরফের নাম ও অবস্থান বলুন।
+      </div>
+      <div id="letter-display"></div>
+    </div>
+
+    <!-- Bottom prev / next buttons -->
+    <div class="nav-buttons" id="nav-buttons">
+      <button class="nav-btn" id="btn-left" aria-label="পরের">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 5 8 12 15 19"></polyline>
+        </svg>
+      </button>
+      <button class="nav-btn" id="btn-right" aria-label="আগের">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 5 16 12 9 19"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <script>
+      // ==========================================================
+      // Shared base letter/color data (source of truth for both pages)
+      // ==========================================================
+      const arabicLetters = [
+        {
+          name: "ا",
+          color: "#ec1a4c",
+          forms: { initial: "ا", medial: "لا", final: "ـا" },
+        },
+        {
+          name: "ب",
+          color: "#60c9e6",
+          forms: { initial: "بـ", medial: "ـبـ", final: "ـب" },
+        },
+        {
+          name: "ت",
+          color: "#60c9e6",
+          forms: { initial: "تـ", medial: "ـتـ", final: "ـت" },
+        },
+        {
+          name: "ث",
+          color: "#60c9e6",
+          forms: { initial: "ثـ", medial: "ـثـ", final: "ـث" },
+        },
+        {
+          name: "ج",
+          color: "#4cb648",
+          forms: { initial: "جـ", medial: "ـجـ", final: "ـج" },
+        },
+        {
+          name: "ح",
+          color: "#60c9e6",
+          forms: { initial: "حـ", medial: "ـحـ", final: "ـح" },
+        },
+        {
+          name: "خ",
+          color: "#60c9e6",
+          forms: { initial: "خـ", medial: "ـخـ", final: "ـخ" },
+        },
+        {
+          name: "د",
+          color: "#4cb648",
+          forms: { initial: "د", medial: "ـد", final: "ـد" },
+        },
+        {
+          name: "ذ",
+          color: "#4cb648",
+          forms: { initial: "ذ", medial: "ـذ", final: "ـذ" },
+        },
+        {
+          name: "ر",
+          color: "#60c9e6",
+          forms: { initial: "ر", medial: "ـر", final: "ـر" },
+        },
+        {
+          name: "ز",
+          color: "#60c9e6",
+          forms: { initial: "ز", medial: "ـز", final: "ـز" },
+        },
+        {
+          name: "س",
+          color: "#4cb648",
+          forms: { initial: "سـ", medial: "ـسـ", final: "ـس" },
+        },
+        {
+          name: "ش",
+          color: "#4cb648",
+          forms: { initial: "شـ", medial: "ـشـ", final: "ـش" },
+        },
+        {
+          name: "ص",
+          color: "#4cb648",
+          forms: { initial: "صـ", medial: "ـصـ", final: "ـص" },
+        },
+        {
+          name: "ض",
+          color: "#4cb648",
+          forms: { initial: "ضـ", medial: "ـضـ", final: "ـض" },
+        },
+        {
+          name: "ط",
+          color: "#60c9e6",
+          forms: { initial: "طـ", medial: "ـطـ", final: "ـط" },
+        },
+        {
+          name: "ظ",
+          color: "#60c9e6",
+          forms: { initial: "ظـ", medial: "ـظـ", final: "ـظ" },
+        },
+        {
+          name: "ع",
+          color: "#4cb648",
+          forms: { initial: "عـ", medial: "ـعـ", final: "ـع" },
+        },
+        {
+          name: "غ",
+          color: "#4cb648",
+          forms: { initial: "غـ", medial: "ـغـ", final: "ـغ" },
+        },
+        {
+          name: "ف",
+          color: "#60c9e6",
+          forms: { initial: "فـ", medial: "ـفـ", final: "ـف" },
+        },
+        {
+          name: "ق",
+          color: "#4cb648",
+          forms: { initial: "قـ", medial: "ـقـ", final: "ـق" },
+        },
+        {
+          name: "ك",
+          color: "#4cb648",
+          forms: { initial: "كـ", medial: "ـكـ", final: "ـك" },
+        },
+        {
+          name: "ل",
+          color: "#4cb648",
+          forms: { initial: "لـ", medial: "ـلـ", final: "ـل" },
+        },
+        {
+          name: "م",
+          color: "#4cb648",
+          forms: { initial: "مـ", medial: "ـمـ", final: "ـم" },
+        },
+        {
+          name: "ن",
+          color: "#4cb648",
+          forms: { initial: "نـ", medial: "ـنـ", final: "ـن" },
+        },
+        {
+          name: "و",
+          color: "#4cb648",
+          forms: { initial: "و", medial: "ـو", final: "ـو" },
+        },
+        {
+          name: "ه",
+          color: "#60c9e6",
+          forms: { initial: "هـ", medial: "ـهـ", final: "ـه" },
+        },
+        {
+          name: "ء",
+          color: "#ec1a4c",
+          forms: { initial: "ء", medial: "ء", final: "ء" },
+        },
+        {
+          name: "ي",
+          color: "#60c9e6",
+          forms: { initial: "يـ", medial: "ـيـ", final: "ـي" },
+        },
+      ];
+
+      function shuffleArray(array) {
+        let shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
+      // ==========================================================
+      // DOM references
+      // ==========================================================
+      const displayDiv = document.getElementById("letter-display");
+      const questionBox = document.getElementById("question-box");
+      const controlsContainer = document.getElementById("controls-container");
+      const topbarTitle = document.getElementById("topbar-title");
+
+      const menuToggle = document.getElementById("menu-toggle");
+      const drawer = document.getElementById("drawer");
+      const drawerClose = document.getElementById("drawer-close");
+      const overlay = document.getElementById("overlay");
+      const drawerItems = document.querySelectorAll(".drawer-item");
+
+      const startSelect = document.getElementById("start-letter");
+      const endSelect = document.getElementById("end-letter");
+      const positionSelect = document.getElementById("position-filter");
+      const countSelect = document.getElementById("count-select");
+
+      let currentPage = "simple"; // "simple" | "advanced" | "class17" | "class28"
+
+      // ==========================================================
+      // Drawer open/close logic
+      // ==========================================================
+      function openDrawer() {
+        drawer.classList.add("open");
+        overlay.classList.add("open");
+      }
+      function closeDrawer() {
+        drawer.classList.remove("open");
+        overlay.classList.remove("open");
+      }
+      menuToggle.addEventListener("click", openDrawer);
+      drawerClose.addEventListener("click", closeDrawer);
+      overlay.addEventListener("click", closeDrawer);
+
+      drawerItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          drawerItems.forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+          switchPage(item.dataset.page);
+          closeDrawer();
+        });
+      });
+
+      function switchPage(page) {
+        currentPage = page;
+        displayDiv.style.fontSize = ""; // reset size set by multi-letter mode
+        displayDiv.classList.toggle(
+          "word-mode",
+          page === "class17" ||
+            page === "class28" ||
+            page === "class29" ||
+            page === "class30",
+        );
+        if (page === "simple") {
+          topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          simple.reset();
+        } else if (page === "class17") {
+          topbarTitle.textContent = "১৭তম ক্লাস";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class17.reset();
+        } else if (page === "class29") {
+          topbarTitle.textContent = "২৯তম ক্লাস";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class29.reset();
+        } else if (page === "class30") {
+          topbarTitle.textContent = "৩০তম ক্লাস";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class30.reset();
+        } else if (page === "class28") {
+          topbarTitle.textContent = "২৮তম ক্লাস";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class28.reset();
+        } else {
+          topbarTitle.textContent = "মুরাক্কাব ভিউয়ার | Pro";
+          controlsContainer.classList.add("visible");
+          questionBox.classList.add("visible");
+          advanced.reset();
+        }
+      }
+
+      function renderLetter(char, color, direction) {
+        displayDiv.classList.remove("slide-from-right", "slide-from-left");
+        void displayDiv.offsetWidth; // reflow
+        displayDiv.textContent = char;
+        displayDiv.style.color = color;
+        if (direction === "right") displayDiv.classList.add("slide-from-right");
+        else if (direction === "left")
+          displayDiv.classList.add("slide-from-left");
+        fitText();
+      }
+
+      // Shrink the text (never enlarge) so long words fit on one line
+      function fitText() {
+        displayDiv.style.fontSize = "";
+        const avail = displayDiv.parentElement.clientWidth - 32;
+        const w = Math.max(displayDiv.offsetWidth, displayDiv.scrollWidth);
+        if (w > avail && w > 0) {
+          const base = parseFloat(getComputedStyle(displayDiv).fontSize);
+          displayDiv.style.fontSize =
+            Math.floor((base * avail * 0.97) / w) + "px";
+        }
+      }
+      window.addEventListener("resize", fitText);
+
+      // ==========================================================
+      // Page 1: Simple 29-letter viewer
+      // ==========================================================
+      const simple = (() => {
+        let pool = [];
+        let history = [];
+        let index = -1;
+
+        function reset() {
+          pool = shuffleArray(arabicLetters);
+          history = [];
+          index = -1;
+          next();
+        }
+
+        function next() {
+          if (index < history.length - 1) {
+            index++;
+            const item = history[index];
+            renderLetter(item.name, item.color, "right");
+            return;
+          }
+          if (pool.length === 0) pool = shuffleArray(arabicLetters);
+          const item = pool.pop();
+          history.push(item);
+          index++;
+          renderLetter(item.name, item.color, "right");
+        }
+
+        function prev() {
+          if (index > 0) {
+            index--;
+            const item = history[index];
+            renderLetter(item.name, item.color, "left");
+          }
+        }
+
+        return { reset, next, prev };
+      })();
+
+      // ==========================================================
+      // Page 2: Advanced murakkab viewer with range + position filter
+      // ==========================================================
+      const advanced = (() => {
+        let pool = [];
+        let history = [];
+        let index = -1;
+
+        arabicLetters.forEach((item, i) => {
+          startSelect.add(new Option(item.name, i));
+          endSelect.add(new Option(item.name, i));
+        });
+        startSelect.value = 0;
+        endSelect.value = arabicLetters.length - 1;
+
+        const posNames = { initial: "শুরুর", medial: "মাঝের", final: "শেষের" };
+
+        function generatePool() {
+          let startIdx = parseInt(startSelect.value);
+          let endIdx = parseInt(endSelect.value);
+          if (startIdx > endIdx) [startIdx, endIdx] = [endIdx, startIdx];
+
+          const selectedLetters = arabicLetters.slice(startIdx, endIdx + 1);
+          const posFilter = positionSelect.value;
+          const count = parseInt(countSelect.value);
+          let list = [];
+
+          // Several letters at once: random joined combinations
+          if (count > 1) {
+            for (let k = 0; k < 40; k++) {
+              const picks = [];
+              let bag = [];
+              for (let j = 0; j < count; j++) {
+                if (bag.length === 0) bag = shuffleArray(selectedLetters);
+                picks.push(bag.pop());
+              }
+              list.push({ multi: picks });
+            }
+            return list;
+          }
+
+          selectedLetters.forEach((item) => {
+            if (posFilter === "all") {
+              Object.keys(item.forms).forEach((pos) => {
+                list.push({
+                  baseLetter: item.name,
+                  char: item.forms[pos],
+                  color: item.color,
+                  posName: posNames[pos],
+                });
+              });
+            } else {
+              list.push({
+                baseLetter: item.name,
+                char: item.forms[posFilter],
+                color: item.color,
+                posName: posNames[posFilter],
+              });
+            }
+          });
+
+          return shuffleArray(list);
+        }
+
+        function show(item, direction) {
+          if (item.multi) {
+            renderLetter(
+              item.multi.map((l) => l.name).join(""),
+              "#0fdefa",
+              direction,
+            );
+          } else {
+            renderLetter(item.char, "#0fdefa", direction);
+          }
+        }
+
+        function reset() {
+          pool = generatePool();
+          history = [];
+          index = -1;
+          next();
+        }
+
+        function next() {
+          if (index < history.length - 1) {
+            index++;
+            show(history[index], "right");
+            return;
+          }
+          if (pool.length === 0) pool = generatePool();
+          const item = pool.pop();
+          history.push(item);
+          index++;
+          show(item, "right");
+        }
+
+        function prev() {
+          if (index > 0) {
+            index--;
+            show(history[index], "left");
+          }
+        }
+
+        startSelect.addEventListener("change", reset);
+        endSelect.addEventListener("change", reset);
+        positionSelect.addEventListener("change", reset);
+        countSelect.addEventListener("change", () => {
+          // position filter only applies when showing a single letter
+          positionSelect.disabled = parseInt(countSelect.value) > 1;
+          reset();
+        });
+
+        return { reset, next, prev };
+      })();
+
+      // ==========================================================
+      // Word-practice viewer factory (random order, no repeats per round)
+      // ==========================================================
+      function createWordViewer(words) {
+        const color = "#0fdefa";
+        let pool = [];
+        let history = [];
+        let index = -1;
+
+        function reset() {
+          pool = shuffleArray(words);
+          history = [];
+          index = -1;
+          next();
+        }
+        function next() {
+          if (index < history.length - 1) {
+            index++;
+            renderLetter(history[index], color, "right");
+            return;
+          }
+          if (pool.length === 0) pool = shuffleArray(words);
+          const word = pool.pop();
+          history.push(word);
+          index++;
+          renderLetter(word, color, "right");
+        }
+        function prev() {
+          if (index > 0) {
+            index--;
+            renderLetter(history[index], color, "left");
+          }
+        }
+        return { reset, next, prev };
+      }
+
+      // Page 3: 17th class – words with kasra
+      const class17 = createWordViewer([
+        "إِبِلِ", "سَمِعَ", "إِرَمَ",
+        "بِفِي", "بِبَنِ", "تَبِعَ",
+        "خَسِرَ", "عَمِلَ", "صَعِقَ",
+        "جَشِيَ", "رَحِمَ", "عَلِمَ",
+        "هِيَتَ", "مَلِكِ", "عِلِيّ",
+        "لَبِنِ", "كَبِرَ", "فَرِحَ",
+        "سَجِرَ", "حَفِظَ", "غَضِبَ",
+        "بَقِيَ", "شَهِدَ", "بَخِلَ",
+        "رَضِيَ", "حَمِدَ", "خَطِفَ",
+        "سَفِهَ", "قَبِلَ", "نَسِيَ",
+        "كَرِهَ", "شَرِبَ", "لَعِبَ",
+      ]);
+
+      // Page 4: 28th class – words with madd-e-badal
+      const class28 = createWordViewer([
+        "اٰمَنَ", "اٰدَمُ", "اٰتَى",
+        "اٰيٰتٍ", "اٰخِرُ", "اٰلَ",
+        "اٰمِنِينَ", "اٰثَارِ", "اٰذَانِهِمْ",
+        "إِيْمَانًا", "إِيْتَاءِ", "إِيْجَادِ",
+        "إِيْمَانُكُمْ", "إِيْثَارًا", "إِيْتٰمِ",
+        "بِإِيْمٰنِهِمْ", "لِإِيْلٰفِ", "إِيْمَانِهِمْ",
+        "بِإِيْمٰنِكُمْ", "أُوْمِنَ", "أُوْذِيْنَا",
+        "أُوْتِيَ", "أُوْلِيْ", "أُوْتِيْتُمْ",
+        "أُوْمِنُ", "أُوْتُوا", "أُوْذُوا",
+      ]);
+
+      // Page 5: 29th class – words ending with tanwin fatha
+      const class29 = createWordViewer([
+        "كِتَابًا", "شَيْئًا", "رَحِيمًا",
+        "عَلِيمًا", "حَكِيمًا", "غَفُورًا",
+        "شَكُورًا", "بَصِيرًا", "سَمِيعًا",
+        "كَيْدًا", "صَوْمًا", "زَوْجًا",
+        "حِسَابًا", "لِبَاسًا", "صَوَابًا",
+        "كِرَامًا", "سُبَاتًا", "أَوْتَادًا",
+        "أَزْوَاجًا", "عِوَجًا", "قَيِّمًا",
+        "مَآبًا", "طَبَقًا", "فَوْجًا",
+        "نَبَاتًا", "مَفَازًا", "أَفْوَاجًا",
+      ]);
+
+      // Page 6: 30th class – words with fatha/damma patterns
+      const class30 = createWordViewer([
+        "فَلَقِ", "وَقَبَ", "عُقَدِ",
+        "حَسَدَ", "لَهَبٍ", "كَسَبَ",
+        "مَسَدٍ", "اَحَدٌ", "صَمَدُ",
+        "وَلَدٌ", "مٰلِكِ", "عَمَلٍ",
+        "خَلَقَ", "كُتُبٌ", "رُسُلٌ",
+        "قَدَرٍ", "بَلَدٍ", "جَمَعَ",
+        "نَزَلَ", "بَشَرٌ", "شَجَرٍ",
+        "حَرَجٌ", "مَرَضٌ", "سَقَرُ",
+        "نَهُرٌ", "عَنَبٍ", "قَسَمٌ",
+        "أَنَفٍ", "نَفَرٌ",
+      ]);
+
+      // ==========================================================
+      // Shared swipe + keyboard navigation, routed to active page
+      // ==========================================================
+      function currentViewer() {
+        if (currentPage === "simple") return simple;
+        if (currentPage === "class30") return class30;
+        if (currentPage === "class29") return class29;
+        if (currentPage === "class17") return class17;
+        if (currentPage === "class28") return class28;
+        return advanced;
+      }
+      function goNext() {
+        currentViewer().next();
+      }
+      function goPrev() {
+        currentViewer().prev();
+      }
+
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      document.addEventListener(
+        "touchstart",
+        (e) => {
+          if (
+            e.target.closest(".controls-container") ||
+            e.target.closest(".drawer") ||
+            e.target.closest(".topbar") ||
+            e.target.closest(".nav-buttons")
+          )
+            return;
+          touchStartX = e.changedTouches[0].screenX;
+        },
+        false,
+      );
+
+      document.addEventListener(
+        "touchend",
+        (e) => {
+          if (
+            e.target.closest(".controls-container") ||
+            e.target.closest(".drawer") ||
+            e.target.closest(".topbar") ||
+            e.target.closest(".nav-buttons")
+          )
+            return;
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        },
+        false,
+      );
+
+      function handleSwipe() {
+        const swipeDistance = touchEndX - touchStartX;
+        const threshold = 40;
+        if (swipeDistance < -threshold) goNext();
+        else if (swipeDistance > threshold) goPrev();
+      }
+
+      document.getElementById("btn-left").addEventListener("click", goNext);
+      document.getElementById("btn-right").addEventListener("click", goPrev);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeDrawer();
+          return;
+        }
+        if (e.key === "ArrowLeft") goNext();
+        else if (e.key === "ArrowRight") goPrev();
+      });
+
+      // ==========================================================
+      // App start
+      // ==========================================================
+      simple.reset();
+    </script>
+  </body>
+</html>
