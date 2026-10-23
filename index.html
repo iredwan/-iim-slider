@@ -330,6 +330,12 @@
         padding: 0 12px;
       }
 
+      /* Waqf-e-taam round mark: half the size of the letters */
+      #letter-display .waqf {
+        font-size: 0.5em;
+        vertical-align: middle;
+      }
+
       /* Mobile: smaller base size (long words are also auto-fitted by JS) */
       @media (max-width: 600px) {
         #letter-display {
@@ -488,6 +494,9 @@
       </div>
       <div class="drawer-item" data-page="class30">
         <span>৩০তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class31">
+        <span>৩১তম ক্লাস</span>
       </div>
     </nav>
 
@@ -712,6 +721,8 @@
         },
       ];
 
+      const WAQF_MARK = " ۝";
+
       function shuffleArray(array) {
         let shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -774,7 +785,8 @@
           page === "class17" ||
             page === "class28" ||
             page === "class29" ||
-            page === "class30",
+            page === "class30" ||
+            page === "class31",
         );
         if (page === "simple") {
           topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
@@ -782,22 +794,27 @@
           questionBox.classList.remove("visible");
           simple.reset();
         } else if (page === "class17") {
-          topbarTitle.textContent = "১৭তম ক্লাস";
+          topbarTitle.textContent = "জের দিয়ে বানান";
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class17.reset();
         } else if (page === "class29") {
-          topbarTitle.textContent = "২৯তম ক্লাস";
+          topbarTitle.textContent = "মাদ্দে ই'ওয়াদ";
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class29.reset();
+        } else if (page === "class31") {
+          topbarTitle.textContent = "মাদ্দে লীন";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class31.reset();
         } else if (page === "class30") {
-          topbarTitle.textContent = "৩০তম ক্লাস";
+          topbarTitle.textContent = "লীনের শব্দ";
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class30.reset();
         } else if (page === "class28") {
-          topbarTitle.textContent = "২৮তম ক্লাস";
+          topbarTitle.textContent = "মাদ্দে বাদল";
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class28.reset();
@@ -812,7 +829,16 @@
       function renderLetter(char, color, direction) {
         displayDiv.classList.remove("slide-from-right", "slide-from-left");
         void displayDiv.offsetWidth; // reflow
-        displayDiv.textContent = char;
+        if (char.endsWith(WAQF_MARK)) {
+          // word + small round waqf mark (half the letter size)
+          displayDiv.textContent = char.slice(0, -WAQF_MARK.length) + " ";
+          const mark = document.createElement("span");
+          mark.className = "waqf";
+          mark.textContent = "۝";
+          displayDiv.appendChild(mark);
+        } else {
+          displayDiv.textContent = char;
+        }
         displayDiv.style.color = color;
         if (direction === "right") displayDiv.classList.add("slide-from-right");
         else if (direction === "left")
@@ -1024,6 +1050,9 @@
         return { reset, next, prev };
       }
 
+      // Adds the waqf-e-taam round mark after a word (29th, 30th & 31st class)
+      const withWaqf = (w) => w + WAQF_MARK;
+
       // Page 3: 17th class – words with kasra
       const class17 = createWordViewer([
         "إِبِلِ", "سَمِعَ", "إِرَمَ",
@@ -1063,7 +1092,7 @@
         "أَزْوَاجًا", "عِوَجًا", "قَيِّمًا",
         "مَآبًا", "طَبَقًا", "فَوْجًا",
         "نَبَاتًا", "مَفَازًا", "أَفْوَاجًا",
-      ]);
+      ].map(withWaqf));
 
       // Page 6: 30th class – words with fatha/damma patterns
       const class30 = createWordViewer([
@@ -1077,12 +1106,27 @@
         "حَرَجٌ", "مَرَضٌ", "سَقَرُ",
         "نَهُرٌ", "عَنَبٍ", "قَسَمٌ",
         "أَنَفٍ", "نَفَرٌ",
-      ]);
+      ].map(withWaqf));
+
+      // Page 7: 31st class – Madd-e-Leen (waqf-e-taam mark after each word)
+      const class31 = createWordViewer([
+        "اَلْغَيْبُ", "اَلْخَيْرُ", "اَلْبَيْعُ",
+        "اَلْيَوْمُ", "اَلْقَوْلُ", "اَلْخَوْفُ",
+        "اَلصَّيْفِ", "اَلْبَيْتِ", "اَلْيَوْمِ",
+        "اَلْمَوْتِ",
+        "قُرَيْشٍ", "رَيْبٍ", "شَيْءٍ",
+        "عَيْنَيْنِ", "خَيْرٌ", "اَلَّيْلِ",
+        "عَلَيْهِ", "بَيْنِ",
+        "خَوْفٍ", "نَوْمٌ", "قَوْمٍ",
+        "قَوْلٌ", "حَوْلِ", "سَوْفَ",
+        "نَوْحٍ", "ثَوْبٍ", "لَوْحٍ",
+      ].map(withWaqf));
 
       // ==========================================================
       // Shared swipe + keyboard navigation, routed to active page
       // ==========================================================
       function currentViewer() {
+        if (currentPage === "class31") return class31;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
         if (currentPage === "class29") return class29;
