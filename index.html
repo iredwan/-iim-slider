@@ -330,6 +330,47 @@
         padding: 0 12px;
       }
 
+      /* ------------------- Tab view (30th class only) ------------------- */
+      .tabs {
+        width: 100%;
+        display: none;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 16px;
+        background: var(--panel-bg);
+        border-bottom: 1px solid var(--panel-border);
+        direction: ltr;
+        flex-shrink: 0;
+        z-index: 100;
+      }
+
+      .tabs.visible {
+        display: flex;
+      }
+
+      .tab-btn {
+        padding: 8px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--panel-border);
+        background: rgba(15, 23, 42, 0.8);
+        color: var(--text-secondary);
+        font-family: "Hind Siliguri", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .tab-btn.active {
+        background: rgba(96, 201, 230, 0.12);
+        border-color: rgba(96, 201, 230, 0.35);
+        color: var(--accent-blue);
+        font-weight: 700;
+      }
+
       /* Waqf-e-taam round mark: half the size of the letters */
       #letter-display .waqf {
         font-size: 0.5em;
@@ -533,6 +574,12 @@
           <option value="6">৬টি</option>
         </select>
       </div>
+    </div>
+
+    <!-- Tab view: only shown on the 30th class page -->
+    <div class="tabs" id="class30-tabs">
+      <button class="tab-btn active" data-tab="letters">লীনের হরফ</button>
+      <button class="tab-btn" data-tab="words">আরজি সাকিনের শব্দ</button>
     </div>
 
     <!-- Main Display Area (shared by both pages) -->
@@ -750,6 +797,8 @@
       const endSelect = document.getElementById("end-letter");
       const positionSelect = document.getElementById("position-filter");
       const countSelect = document.getElementById("count-select");
+      const class30Tabs = document.getElementById("class30-tabs");
+      const tabBtns = class30Tabs.querySelectorAll(".tab-btn");
 
       let currentPage = "simple"; // "simple" | "advanced" | "class17" | "class28"
 
@@ -780,6 +829,7 @@
       function switchPage(page) {
         currentPage = page;
         displayDiv.style.fontSize = ""; // reset size set by multi-letter mode
+        class30Tabs.classList.toggle("visible", page === "class30");
         displayDiv.classList.toggle(
           "word-mode",
           page === "class17" ||
@@ -809,10 +859,10 @@
           questionBox.classList.remove("visible");
           class31.reset();
         } else if (page === "class30") {
-          topbarTitle.textContent = "আরজি সাকিনের শব্দ";
+          topbarTitle.textContent = "লীনের শব্দ";
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
-          class30.reset();
+          selectTab("letters");
         } else if (page === "class28") {
           topbarTitle.textContent = "মাদ্দে বাদল";
           controlsContainer.classList.remove("visible");
@@ -1095,7 +1145,7 @@
       ].map(withWaqf));
 
       // Page 6: 30th class – words with fatha/damma patterns
-      const class30 = createWordViewer([
+      const class30Words = createWordViewer([
         "فَلَقِ", "وَقَبَ", "عُقَدِ",
         "حَسَدَ", "لَهَبٍ", "كَسَبَ",
         "مَسَدٍ", "اَحَدٌ", "صَمَدُ",
@@ -1108,6 +1158,42 @@
         "أَنَفٍ", "نَفَرٌ",
       ].map(withWaqf));
 
+      // 30th class, tab 1: Leen letters (waw-leen, then yaa-leen)
+      const class30Letters = createWordViewer([
+        "بَوْ", "تَوْ", "ثَوْ", "جَوْ", "حَوْ", "خَوْ", "دَوْ", "ذَوْ", "رَوْ",
+        "بَيْ", "تَيْ", "ثَيْ", "جَيْ", "حَيْ", "خَيْ", "دَيْ", "ذَيْ", "رَيْ",
+      ]);
+
+      // 30th class page = two tabs, each with its own random viewer
+      const class30 = (() => {
+        let active = class30Letters;
+        return {
+          setTab(name) {
+            active = name === "words" ? class30Words : class30Letters;
+            active.reset();
+          },
+          reset() {
+            active.reset();
+          },
+          next() {
+            active.next();
+          },
+          prev() {
+            active.prev();
+          },
+        };
+      })();
+
+      function selectTab(name) {
+        tabBtns.forEach((b) =>
+          b.classList.toggle("active", b.dataset.tab === name),
+        );
+        class30.setTab(name);
+      }
+      tabBtns.forEach((b) =>
+        b.addEventListener("click", () => selectTab(b.dataset.tab)),
+      );
+
       // Page 7: 31st class – Madd-e-Leen (waqf-e-taam mark after each word)
       const class31 = createWordViewer([
         "اَلْغَيْبُ", "اَلْخَيْرُ", "اَلْبَيْعُ",
@@ -1115,7 +1201,7 @@
         "اَلصَّيْفِ", "اَلْبَيْتِ", "اَلْيَوْمِ",
         "اَلْمَوْتِ",
         "قُرَيْشٍ", "رَيْبٍ", "شَيْءٍ",
-        "عَيْنَيْنِ", "خَيْرٌ", "اَلَّيْلِ",
+        "عَيْنَيْنِ", "خَيْرٌ", "الَّيْلِ",
         "عَلَيْهِ", "بَيْنِ",
         "خَوْفٍ", "نَوْمٌ", "قَوْمٍ",
         "قَوْلٌ", "حَوْلِ", "سَوْفَ",
@@ -1151,7 +1237,8 @@
             e.target.closest(".controls-container") ||
             e.target.closest(".drawer") ||
             e.target.closest(".topbar") ||
-            e.target.closest(".nav-buttons")
+            e.target.closest(".nav-buttons") ||
+            e.target.closest(".tabs")
           )
             return;
           touchStartX = e.changedTouches[0].screenX;
@@ -1166,7 +1253,8 @@
             e.target.closest(".controls-container") ||
             e.target.closest(".drawer") ||
             e.target.closest(".topbar") ||
-            e.target.closest(".nav-buttons")
+            e.target.closest(".nav-buttons") ||
+            e.target.closest(".tabs")
           )
             return;
           touchEndX = e.changedTouches[0].screenX;
