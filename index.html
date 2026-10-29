@@ -527,6 +527,9 @@
       <div class="drawer-item" data-page="class17">
         <span>১৭তম ক্লাস</span>
       </div>
+      <div class="drawer-item" data-page="class19">
+        <span>১৯তম ক্লাস</span>
+      </div>
       <div class="drawer-item" data-page="class28">
         <span>২৮তম ক্লাস</span>
       </div>
@@ -833,6 +836,7 @@
         displayDiv.classList.toggle(
           "word-mode",
           page === "class17" ||
+            page === "class19" ||
             page === "class28" ||
             page === "class29" ||
             page === "class30" ||
@@ -843,6 +847,11 @@
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           simple.reset();
+        } else if (page === "class19") {
+          topbarTitle.textContent = "হারকাত দিয়ে বানান";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class19.reset();
         } else if (page === "class17") {
           topbarTitle.textContent = "জের দিয়ে বানান";
           controlsContainer.classList.remove("visible");
@@ -1109,13 +1118,23 @@
         "بِفِي", "بِبَنِ", "تَبِعَ",
         "خَسِرَ", "عَمِلَ", "صَعِقَ",
         "جَشِيَ", "رَحِمَ", "عَلِمَ",
-        "هِيَتَ", "مَلِكِ", "ضَحِكَ",
+        "هِيَتَ", "مَلِكِ", "عِلِيّ",
         "لَبِنِ", "كَبِرَ", "فَرِحَ",
         "سَجِرَ", "حَفِظَ", "غَضِبَ",
         "بَقِيَ", "شَهِدَ", "بَخِلَ",
         "رَضِيَ", "حَمِدَ", "خَطِفَ",
         "سَفِهَ", "قَبِلَ", "نَسِيَ",
         "كَرِهَ", "شَرِبَ", "لَعِبَ",
+      ]);
+
+      // 19th class – spelling with harakat
+      const class19 = createWordViewer([
+        "ضُرِعَ", "خُلِقَ", "جُعِلَ", "طُبِعَ", "كُتِبَ", "رُزِقَ",
+        "عُصِرَ", "نُصِرَ", "ظُلِمَ", "قُرِئَ", "فُتِحَ", "ضُرِبَ",
+        "فُقِدَ", "حُشِرَ", "قُتِلَ", "كُرِهَ", "بُعِثَ", "سُئِلَ",
+        "نُسِخَ", "غُلِبَ", "حُمِلَ", "حُمِدَ", "وُجِدَ", "عُلِمَ",
+        "صُنِعَ", "كُلِمَ", "مُلِكَ", "خُتِمَ", "فَرِحَ", "بُدِعَ",
+        "ذُبِحَ", "سَمِعَ", "بَصِرُ",
       ]);
 
       // Page 4: 28th class – words with madd-e-badal
@@ -1213,6 +1232,7 @@
       // ==========================================================
       function currentViewer() {
         if (currentPage === "class31") return class31;
+        if (currentPage === "class19") return class19;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
         if (currentPage === "class29") return class29;
