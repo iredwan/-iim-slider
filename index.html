@@ -542,6 +542,9 @@
       <div class="drawer-item" data-page="class31">
         <span>৩১তম ক্লাস</span>
       </div>
+      <div class="drawer-item" data-page="class33">
+        <span>৩৩তম ক্লাস</span>
+      </div>
     </nav>
 
     <!-- Position filter / range controls: only shown on "advanced" page -->
@@ -840,7 +843,8 @@
             page === "class28" ||
             page === "class29" ||
             page === "class30" ||
-            page === "class31",
+            page === "class31" ||
+            page === "class33",
         );
         if (page === "simple") {
           topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
@@ -862,6 +866,11 @@
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class29.reset();
+        } else if (page === "class33") {
+          topbarTitle.textContent = "মাদ্দে মুংফাসিল";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class33.reset();
         } else if (page === "class31") {
           topbarTitle.textContent = "মাদ্দে লীন";
           controlsContainer.classList.remove("visible");
@@ -1127,6 +1136,17 @@
         "كَرِهَ", "شَرِبَ", "لَعِبَ",
       ]);
 
+      // 33rd class – Madd-e-Munfasil (phrases)
+      const class33 = createWordViewer([
+        "لَاۤ اِلٰهَ", "إِنَّاۤ اَعْطَيْنٰكَ", "مَاۤ اَغْنٰى",
+        "يَاۤ اَيُّهَا", "لَاۤ اَعْبُدُ", "وَلَاۤ اَنَا",
+        "بِمَاۤ اَرَاكَ", "مَاۤ اَصَابَ", "فِيْۤ اَحْسَنِ",
+        "فِيْۤ اَيَّامٍ", "رَبِّیْۤ اَعْلَمُ", "بَنِيْۤ اٰدَمَ",
+        "فِيْۤ اَذَانِهِمْ", "اِنِّيْۤ اُرِيْدُ", "قَاۤلُوْا اَوَلَمْ",
+        "فِيْۤ اَمْرِنَا", "قَالُوْۤا اَنُؤْمِنُ", "قَالُـوْۤا اُوْذِیْنَا",
+        "قَالُوْۤا اَرَنَا", "تُوْبُوْۤا اِلَى اللّٰهِ", "قَالُوْۤا اَیْنَ",
+      ]);
+
       // 19th class – spelling with harakat
       const class19 = createWordViewer([
         "ضُرِعَ", "خُلِقَ", "جُعِلَ", "طُبِعَ", "كُتِبَ", "رُزِقَ",
@@ -1232,6 +1252,7 @@
       // ==========================================================
       function currentViewer() {
         if (currentPage === "class31") return class31;
+        if (currentPage === "class33") return class33;
         if (currentPage === "class19") return class19;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
