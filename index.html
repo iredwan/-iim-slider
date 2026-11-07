@@ -530,6 +530,9 @@
       <div class="drawer-item" data-page="class19">
         <span>১৯তম ক্লাস</span>
       </div>
+      <div class="drawer-item" data-page="class22">
+        <span>২২তম ক্লাস</span>
+      </div>
       <div class="drawer-item" data-page="class28">
         <span>২৮তম ক্লাস</span>
       </div>
@@ -840,6 +843,7 @@
           "word-mode",
           page === "class17" ||
             page === "class19" ||
+            page === "class22" ||
             page === "class28" ||
             page === "class29" ||
             page === "class30" ||
@@ -851,6 +855,11 @@
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           simple.reset();
+        } else if (page === "class22") {
+          topbarTitle.textContent = "তাশদীদ";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class22.reset();
         } else if (page === "class19") {
           topbarTitle.textContent = "হারকাত দিয়ে বানান";
           controlsContainer.classList.remove("visible");
@@ -1147,6 +1156,17 @@
         "قَالُوْۤا اَرَنَا", "تُوْبُوْۤا اِلَى اللّٰهِ", "قَالُوْۤا اَیْنَ",
       ]);
 
+      // 22nd class – Tashdeed
+      const class22 = createWordViewer([
+        "كُلَّ", "مَسَّ", "سِرَّ", "شَرَّ", "حَتَّى", "تَوَلَّى",
+        "تَزَكَّى", "تَصَلَّى", "وَفَّى", "سَوَّى", "عَلَّمَ", "حَرَّمَ",
+        "سَخَّرَ", "سَلَّمَ", "فَكَّرَ", "يُيَسِّرُ", "يَتَذَكَّرُ", "عِلِّيُّونَ",
+        "غَفَّارٌ", "عَفُوٌّ", "غَنِيٌّ", "عَلِيٌّ", "خَفِيٌّ", "وَلِيٌّ",
+        "إِيَّاكَ", "مُذَكِّرٌ", "أَيَّانَ", "شَكٍّ", "حِلَّ", "صَفًّا",
+        "وَلَّى", "تَوَكَّلَ", "وَالتِّينِ", "بِالصَّبْرِ", "مَآلطَّارِقُ", "اَبَّ",
+        "كَذَّبَ", "رَبِّكَ", "حَلَّلَ", "حُرِّمَ",
+      ]);
+
       // 19th class – spelling with harakat
       const class19 = createWordViewer([
         "ضُرِعَ", "خُلِقَ", "جُعِلَ", "طُبِعَ", "كُتِبَ", "رُزِقَ",
@@ -1254,6 +1274,7 @@
         if (currentPage === "class31") return class31;
         if (currentPage === "class33") return class33;
         if (currentPage === "class19") return class19;
+        if (currentPage === "class22") return class22;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
         if (currentPage === "class29") return class29;
