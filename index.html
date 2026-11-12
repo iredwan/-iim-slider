@@ -533,6 +533,9 @@
       <div class="drawer-item" data-page="class22">
         <span>২২তম ক্লাস</span>
       </div>
+      <div class="drawer-item" data-page="class24">
+        <span>২৪তম ক্লাস</span>
+      </div>
       <div class="drawer-item" data-page="class28">
         <span>২৮তম ক্লাস</span>
       </div>
@@ -547,6 +550,12 @@
       </div>
       <div class="drawer-item" data-page="class33">
         <span>৩৩তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class35">
+        <span>৩৫তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class37">
+        <span>৩৭তম ক্লাস</span>
       </div>
     </nav>
 
@@ -844,17 +853,25 @@
           page === "class17" ||
             page === "class19" ||
             page === "class22" ||
+            page === "class24" ||
             page === "class28" ||
             page === "class29" ||
             page === "class30" ||
             page === "class31" ||
-            page === "class33",
+            page === "class33" ||
+            page === "class35" ||
+            page === "class37",
         );
         if (page === "simple") {
           topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           simple.reset();
+        } else if (page === "class24") {
+          topbarTitle.textContent = "ইস্তিলা";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class24.reset();
         } else if (page === "class22") {
           topbarTitle.textContent = "তাশদীদ";
           controlsContainer.classList.remove("visible");
@@ -875,6 +892,16 @@
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class29.reset();
+        } else if (page === "class37") {
+          topbarTitle.textContent = "ইখফা গুন্নাহ";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class37.reset();
+        } else if (page === "class35") {
+          topbarTitle.textContent = "মাদ্দে লাযিম কিলমী মুসাক্কাল";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class35.reset();
         } else if (page === "class33") {
           topbarTitle.textContent = "মাদ্দে মুংফাসিল";
           controlsContainer.classList.remove("visible");
@@ -1156,6 +1183,36 @@
         "قَالُوْۤا اَرَنَا", "تُوْبُوْۤا اِلَى اللّٰهِ", "قَالُوْۤا اَیْنَ",
       ]);
 
+      // 37th class – Ikhfa Ghunnah
+      const class37 = createWordViewer([
+        "تَالٍ فِيْهِ", "صَفًّا صَفًّا", "قَوْلٍ سَدِيْدٍ",
+        "مَكَانٍ قَرِيْبٍ", "كَأْسًا دِهَاقًا", "قَوْلًا سَدِيْدًا",
+        "قَوْمٌ ظَالِمُوْنَ", "قَوْمٌ طَاغُوْنَ", "عَذَابٌ قَرِيْبٌ",
+        "عَذَابٌ ضِعْفٌ", "كُنْتُمْ", "أَنْتَ",
+        "مَنْ جَآءَ", "أَنْجَيْنٰكُمْ", "مَنْ ثَقُلَتْ",
+        "أَنْذَرْنٰكُمْ", "مِنْ دُوْنِهٖ", "اَلْإِنْسَانَ",
+        "مِنْ زَوَالٍ", "مِنْ شَرِّ", "فَانْتَهَوْا",
+        "مَنْ كَانَ",
+      ]);
+
+      // 35th class – Madd-e-Lazim Kalimi Muthaqqal
+      const class35 = createWordViewer([
+        "دَآبَّةٌ", "حَآجَّ", "اَلصَّآخَّةُ", "اَلطَّآمَّةُ",
+        "اَلضَّآلِّيْنَ", "لَضَآلُّوْنَ", "اَلْحَآقَّةُ", "مَا الْحَآقَّةُ",
+        "كَآفَّةً", "جَآ نٌّ", "تَاْمُرُوْٓنِّیْ", "اَتُحَآجُّوْٓنِّیْ",
+        "وَ لَا تَحٰٓضُّوْنَ", "وَالصَّآفَّاتِ",
+      ]);
+
+      // 24th class – Isti'la
+      const class24 = createWordViewer([
+        "طَبَقًا", "خَلَقَ", "ضَرَبَ", "غَفُوْرٌ", "الصَّادِقِيْنَ", "ظَلَمَ",
+        "قَدَرَ", "مَرِضْتُ", "خَبِيْرٌ", "صَبَرَ", "غَلَبَتْ", "الْقَارِعَةُ",
+        "ظُلُمَاتٌ", "طَيِّبَاتٍ", "يَخْرُجُ", "نَصْرٌ", "يَضْرِبُ", "يَغْفِرُ",
+        "صِرَاطَ", "يَقْرَأُ", "يَظْلِمُوْنَ", "خَائِفِيْنَ", "مِصْرَ", "فَضْلٌ",
+        "غَائِبِيْنَ", "يَطْمَعُ", "قُلُوْبٌ", "حَافِظِيْنَ", "مُخْتَلِفٌ", "صَلَاةٌ",
+        "ضَحِكَ", "مَغْفِرَةٌ", "طَلَعَتْ", "حَقٌّ", "عَظِيْمٌ",
+      ]);
+
       // 22nd class – Tashdeed
       const class22 = createWordViewer([
         "كُلَّ", "مَسَّ", "سِرَّ", "شَرَّ", "حَتَّى", "تَوَلَّى",
@@ -1273,8 +1330,11 @@
       function currentViewer() {
         if (currentPage === "class31") return class31;
         if (currentPage === "class33") return class33;
+        if (currentPage === "class35") return class35;
+        if (currentPage === "class37") return class37;
         if (currentPage === "class19") return class19;
         if (currentPage === "class22") return class22;
+        if (currentPage === "class24") return class24;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
         if (currentPage === "class29") return class29;
