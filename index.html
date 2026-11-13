@@ -12,9 +12,19 @@
     />
 
     <style>
+      /* আরবি লেখার ফন্ট */
       @font-face {
-        font-family: "IqraArabicFont";
-        src: url("../assets/fonts/CustomFont.ttf") format("truetype");
+        font-family: "IIMArabic";
+        src: url("assets/fonts/iimarabicfont.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      /* বাংলা লেখার ফন্ট */
+      @font-face {
+        font-family: "CustomFont";
+        src: url("assets/fonts/CustomFont.ttf") format("truetype");
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -55,7 +65,7 @@
           #1e293b 0%,
           #0f172a 70%
         );
-        font-family: "Hind Siliguri", sans-serif;
+        font-family: "CustomFont", "Hind Siliguri", sans-serif;
         user-select: none;
         touch-action: pan-y;
         color: var(--text-primary);
@@ -264,7 +274,7 @@
         color: var(--text-primary);
         border: 1px solid var(--panel-border);
         border-radius: 8px;
-        font-family: "Hind Siliguri", sans-serif;
+        font-family: "CustomFont", "Hind Siliguri", sans-serif;
         font-size: 15px;
         font-weight: 500;
         outline: none;
@@ -312,12 +322,13 @@
       }
 
       #letter-display {
-        font-family: "IqraArabicFont", serif;
+        font-family: "IIMArabic", "CustomFont", serif;
         font-size: min(38vh, 310px);
         font-weight: 700;
         text-align: center;
         white-space: nowrap;
-        line-height: 1.1;
+        /* হারাকাত/মাদ্দ কেটে না যাওয়ার জন্য বড় line-height */
+        line-height: 1.5;
         filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
         will-change: transform, opacity;
         backface-visibility: hidden;
@@ -354,7 +365,7 @@
         border: 1px solid var(--panel-border);
         background: rgba(15, 23, 42, 0.8);
         color: var(--text-secondary);
-        font-family: "Hind Siliguri", sans-serif;
+        font-family: "CustomFont", "Hind Siliguri", sans-serif;
         font-size: 15px;
         font-weight: 500;
         cursor: pointer;

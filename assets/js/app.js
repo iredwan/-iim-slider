@@ -61,23 +61,24 @@
     return '<span class="rank-badge' + cls + '">' + ordinal(rank) + '</span>';
   }
 
-  function renderTable() {
+function renderTable() {
     var body = document.getElementById('resultBody');
     body.innerHTML = students.map(function (s, i) {
       /* প্রিন্টে প্রতি পেজে ১০ জন — ১১তম, ২১তম... সারিতে পেজ-ব্রেক */
       var rowClass = (i > 0 && i % 10 === 0) ? ' class="page-break"' : '';
       return '<tr' + rowClass + ' data-name="' + escapeHtml(s.name) + '">' +
-        '<th scope="row" class="c-name" data-label="শিক্ষার্থীর নাম">' + escapeHtml(s.name) + '</th>' +
-        '<td data-label="প্রধান উস্তাজার উপস্থিতি নাম্বার/১৩">' + markCell(s.chief) + '</td>' +
-        '<td data-label="সহকারী উস্তাজার উপস্থিতি নাম্বার/১৩">' + markCell(s.assistant) + '</td>' +
-        '<td data-label="পড়া আদায় ক্লাসের প্রাপ্ত নাম্বার/১৩">' + markCell(s.recitation) + '</td>' +
-        '<td data-label="মৌখিক পরীক্ষার প্রাপ্ত নাম্বার/৫৬">' + markCell(s.oral) + '</td>' +
-        '<td data-label="আচরণের প্রাপ্ত নাম্বার/৫">' + markCell(s.behavior) + '</td>' +
-        '<td class="c-total" data-label="মোট নাম্বার/১০০">' + toBn(s.total) + '</td>' +
+        '<th scope="row" class="c-name" data-label="নাম">' + escapeHtml(s.name) + '</th>' +
+        '<td data-label="প্রধান উস্তাজার ক্লাসে উপস্থিতি/১৩">' + markCell(s.chief) + '</td>' +
+        '<td data-label="সহকারী উস্তাজার ক্লাসে উপস্থিতি/১৩">' + markCell(s.assistant) + '</td>' +
+        '<td data-label="পড়া আদায় ক্লাসে প্রাপ্ত নম্বর/১৩">' + markCell(s.recitation) + '</td>' +
+        '<td data-label="মৌখিক পরীক্ষা/৫৬">' + markCell(s.oral) + '</td>' +
+        '<td data-label="আচরণ/৫">' + markCell(s.behavior) + '</td>' +
+        '<td class="c-total" data-label="মোট/১০০">' + toBn(s.total) + '</td>' +
         '<td class="c-rank" data-label="প্রাপ্ত স্থান">' + rankBadge(s.rank) + '</td>' +
         '</tr>';
     }).join('');
   }
+
 
   function renderPodium() {
     var el = document.getElementById('podium');
