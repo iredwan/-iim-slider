@@ -547,6 +547,9 @@
       <div class="drawer-item" data-page="class24">
         <span>২৪তম ক্লাস</span>
       </div>
+      <div class="drawer-item" data-page="class25">
+        <span>২৫তম ক্লাস</span>
+      </div>
       <div class="drawer-item" data-page="class28">
         <span>২৮তম ক্লাস</span>
       </div>
@@ -865,6 +868,7 @@
             page === "class19" ||
             page === "class22" ||
             page === "class24" ||
+            page === "class25" ||
             page === "class28" ||
             page === "class29" ||
             page === "class30" ||
@@ -878,6 +882,11 @@
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           simple.reset();
+        } else if (page === "class25") {
+          topbarTitle.textContent = "ছফীর";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class25.reset();
         } else if (page === "class24") {
           topbarTitle.textContent = "ইস্তিলা";
           controlsContainer.classList.remove("visible");
@@ -1214,6 +1223,14 @@
         "وَ لَا تَحٰٓضُّوْنَ", "وَالصَّآفَّاتِ",
       ]);
 
+      // 25th class – Safir
+      const class25 = createWordViewer([
+        "فَاصْبِرْ", "أَصْحَابُ", "صُحُفًا", "صِرَاطَ", "صَبَرَ", "يَسَّمَّعُوْنَ",
+        "اَلسَّمَاءِ", "اَلسَّلَامُ", "بِسْمِ", "اَلْمُسْتَقِيْمَ", "أَسْلَمَ", "سُبُلًا",
+        "سِرَاجًا", "سَمِعَ", "اَلزَّيْتُوْنِ", "اَلْمُزَّمِّلُ", "اَلزَّكَاةَ", "يَزْدَادُوْا",
+        "رِزْقًا", "أَزْوَاجًا", "زُبُرًا", "زِيْنَةً", "زَعَمْتُمْ",
+      ]);
+
       // 24th class – Isti'la
       const class24 = createWordViewer([
         "طَبَقًا", "خَلَقَ", "ضَرَبَ", "غَفُوْرٌ", "الصَّادِقِيْنَ", "ظَلَمَ",
@@ -1346,6 +1363,7 @@
         if (currentPage === "class19") return class19;
         if (currentPage === "class22") return class22;
         if (currentPage === "class24") return class24;
+        if (currentPage === "class25") return class25;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
         if (currentPage === "class29") return class29;
