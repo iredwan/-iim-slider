@@ -255,6 +255,14 @@
         display: flex;
       }
 
+      .advanced-only-controls {
+        display: contents;
+      }
+
+      .controls-container.simple-mode .advanced-only-controls {
+        display: none;
+      }
+
       .control-group {
         display: flex;
         align-items: center;
@@ -573,8 +581,8 @@
       </div>
     </nav>
 
-    <!-- Position filter / range controls: only shown on "advanced" page -->
-    <div class="controls-container" id="controls-container">
+    <!-- Letter range controls are shared; other filters are for murakkab only -->
+    <div class="controls-container visible simple-mode" id="controls-container">
       <div class="control-group">
         <label for="start-letter">শুরু:</label>
         <select id="start-letter"></select>
@@ -585,26 +593,28 @@
         <select id="end-letter"></select>
       </div>
 
-      <div class="control-group">
-        <label for="position-filter">অবস্থান:</label>
-        <select id="position-filter">
-          <option value="all">সব অবস্থান (All)</option>
-          <option value="initial">শুরুর অবস্থান (Initial)</option>
-          <option value="medial">মাঝের অবস্থান (Medial)</option>
-          <option value="final">শেষের অবস্থান (Final)</option>
-        </select>
-      </div>
+      <div class="advanced-only-controls">
+        <div class="control-group">
+          <label for="position-filter">অবস্থান:</label>
+          <select id="position-filter">
+            <option value="all">সব অবস্থান (All)</option>
+            <option value="initial">শুরুর অবস্থান (Initial)</option>
+            <option value="medial">মাঝের অবস্থান (Medial)</option>
+            <option value="final">শেষের অবস্থান (Final)</option>
+          </select>
+        </div>
 
-      <div class="control-group">
-        <label for="count-select">একসাথে হরফ:</label>
-        <select id="count-select">
-          <option value="1">১টি</option>
-          <option value="2">২টি</option>
-          <option value="3">৩টি</option>
-          <option value="4">৪টি</option>
-          <option value="5">৫টি</option>
-          <option value="6">৬টি</option>
-        </select>
+        <div class="control-group">
+          <label for="count-select">একসাথে হরফ:</label>
+          <select id="count-select">
+            <option value="1">১টি</option>
+            <option value="2">২টি</option>
+            <option value="3">৩টি</option>
+            <option value="4">৪টি</option>
+            <option value="5">৫টি</option>
+            <option value="6">৬টি</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -879,7 +889,7 @@
         );
         if (page === "simple") {
           topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
-          controlsContainer.classList.remove("visible");
+          controlsContainer.classList.add("visible", "simple-mode");
           questionBox.classList.remove("visible");
           simple.reset();
         } else if (page === "class25") {
@@ -944,6 +954,7 @@
           class28.reset();
         } else {
           topbarTitle.textContent = "মুরাক্কাব ভিউয়ার | Pro";
+          controlsContainer.classList.remove("simple-mode");
           controlsContainer.classList.add("visible");
           questionBox.classList.add("visible");
           advanced.reset();
@@ -991,8 +1002,15 @@
         let history = [];
         let index = -1;
 
+        function getSelectedLetters() {
+          let startIdx = parseInt(startSelect.value);
+          let endIdx = parseInt(endSelect.value);
+          if (startIdx > endIdx) [startIdx, endIdx] = [endIdx, startIdx];
+          return arabicLetters.slice(startIdx, endIdx + 1);
+        }
+
         function reset() {
-          pool = shuffleArray(arabicLetters);
+          pool = shuffleArray(getSelectedLetters());
           history = [];
           index = -1;
           next();
@@ -1005,7 +1023,7 @@
             renderLetter(item.name, item.color, "right");
             return;
           }
-          if (pool.length === 0) pool = shuffleArray(arabicLetters);
+          if (pool.length === 0) pool = shuffleArray(getSelectedLetters());
           const item = pool.pop();
           history.push(item);
           index++;
@@ -1126,8 +1144,13 @@
           }
         }
 
-        startSelect.addEventListener("change", reset);
-        endSelect.addEventListener("change", reset);
+        function resetCurrentViewer() {
+          if (currentPage === "simple") simple.reset();
+          else reset();
+        }
+
+        startSelect.addEventListener("change", resetCurrentViewer);
+        endSelect.addEventListener("change", resetCurrentViewer);
         positionSelect.addEventListener("change", reset);
         countSelect.addEventListener("change", () => {
           // position filter only applies when showing a single letter
