@@ -25,6 +25,19 @@
       @font-face {
         font-family: "CustomFont";
         src: url("assets/fonts/CustomFont.ttf") format("truetype");
+        /* বাংলা ১ (U+09E7) বাদ — নিচের আলাদা @font-face থেকে আসবে */
+        unicode-range: U+0000-09E6, U+09E8-10FFFF;
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      /* বাংলা ১: CustomFont-এরই ১ হরফ, শুধু hinting ছাড়া (ছোট সাইজে ১-এর নিচের
+         অংশ কেটে যাওয়া ঠেকাতে)। ফাইলের ভেতরেই বসানো, আলাদা ফন্ট ফাইল লাগে না। */
+      @font-face {
+        font-family: "CustomFont";
+        src: url("data:font/ttf;base64,AAEAAAAOAIAAAwBgR0RFRgARAAEAAAdwAAAAFkdQT1MAGQAMAAAHiAAAABBHU1VCyc7RAQAAB5gAAAAgT1MvMnFDXYsAAAIUAAAAYGNtYXAADAo6AAACdAAAADRnYXNwABcACQAAB2AAAAAQZ2x5ZnG1PGYAAADsAAAAnGhlYWTzCkzfAAABsAAAADZoaGVhBs0A+wAAAfAAAAAkaG10eARZAJQAAAHoAAAACGxvY2EATgAVAAABqAAAAAZtYXhwABQBwAAAAYgAAAAgbmFtZXgfgBQAAAKoAAAElnBvc3T+0AAUAAAHQAAAACAAAgBmAAACNwKmAAMABwAAEyERISURIRFmAdH+LwGV/qgCpv1aPAIu/dIAAQAu//0BgAKRACUAACUUBwYjIicmNTQ3NjMyFz4BNTQnLgEnLgE1NDYzMhUcAQceARcWAYBISVYoHiUmKC1PJRQRRh9EIB0qKB43ATBFFEnbWENDFxojLR4gKhQqFjJHHT8cGkMTHixNBw8JL0kcYgAAAQAAAAIA5AAIANoABgABAAAAAAAAAAAAAAAAAAMAAQAAABUATgAAAAEAAAAAQgwjHod+Xw889QAbA+gAAAAAxswZGwAAAADK3K5b/dX+bgReBAkAAAAJAAIAAAAAAAACoABmAbkALgABAAAD6P5wAK8Ed/3V/hEEXgABAAAAAAAAAAAAAAAAAAAAAgADAkABkAAFAAACvAKKAAAAyAK8AooAAAH0ADIA+gAAAgAGAAAAAAAAAAABAAAAAAAAAAAAAAAAAABBVlJPAEAJ5wnnA+j+cACvA+gBkAAAAAEAAAAAAcYCZwAAACAAAAAAAAIAAAADAAAAFAADAAEAAAAUAAQAIAAAAAQABAABAAAJ5///AAAJ5///9hoAAQAAAAAAAAAHAFoAAwABBAkAAAPkAAAAAwABBAkAAQASA+QAAwABBAkAAgAOA/YAAwABBAkAAwAeBAQAAwABBAkABAASA+QAAwABBAkABQAaBCIAAwABBAkABgASA+QARABlAHYAZQBsAG8AcABlAHIAOgAgAFQAYQBuAGIAaQBuACAASQBzAGwAYQBtACAAUwBpAHkAYQBtAA0ACgBEAGUAdgBlAGwAbwBwAGUAZAAgAHUAbgBkAGUAcgAgACcAQQB2AHIAbwAgAEYAbwBuAHQAIABEAGUAdgBlAGwAbwBwAG0AZQBuAHQAIABQAHIAbwBqAGUAYwB0ACcALgANAAoAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAG8AbQBpAGMAcgBvAG4AbABhAGIALgBjAG8AbQANAAoADQAKAFQAaABpAHMAIABGAG8AbgB0ACAAUwBvAGYAdAB3AGEAcgBlACAAaQBzACAAbABpAGMAZQBuAHMAZQBkACAAdQBuAGQAZQByACAAdABoAGUAIABTAEkATAAgAE8AcABlAG4AIABGAG8AbgB0ACAATABpAGMAZQBuAHMAZQAsACAAVgBlAHIAcwBpAG8AbgAgADEALgAwAC4AIABOAG8AIABtAG8AZABpAGYAaQBjAGEAdABpAG8AbgAgAG8AZgAgAHQAaABlACAAbABpAGMAZQBuAHMAZQAgAGkAcwAgAHAAZQByAG0AaQB0AHQAZQBkACwAIABvAG4AbAB5ACAAdgBlAHIAYgBhAHQAaQBtACAAYwBvAHAAeQAgAGkAcwAgAGEAbABsAG8AdwBlAGQALgAgAFQAaABpAHMAIABsAGkAYwBlAG4AcwBlACAAaQBzACAAYwBvAHAAaQBlAGQAIABiAGUAbABvAHcALAAgAGEAbgBkACAAaQBzACAAYQBsAHMAbwAgAGEAdgBhAGkAbABhAGIAbABlACAAdwBpAHQAaAAgAGEAIABGAEEAUQAgAGEAdAA6ACAAaAB0AHQAcAA6AC8ALwBzAGMAcgBpAHAAdABzAC4AcwBpAGwALgBvAHIAZwAvAE8ARgBMAA0ACgBMAGEAdABpAG4AIAB0AHkAcABlAGYAYQBjAGUAcwAgAGEAcgBlACAAZgByAG8AbQAgAEcAZQBuAHQAaQB1AG0AIAAoAGgAdAB0AHAAOgAvAC8AcwBjAHIAaQBwAHQAcwAuAHMAaQBsAC4AbwByAGcALwBjAG0AcwAvAHMAYwByAGkAcAB0AHMALwBwAGEAZwBlAC4AcABoAHAAPwBpAHQAZQBtAF8AaQBkAD0ARwBlAG4AdABpAHUAbQApAC4AIABHAGUAbgB0AGkAdQBtACAAaQBzACAAYQAgAHQAcgBhAGQAZQBtAGEAcgBrACAAbwBmACAAUwBJAEwAIABJAG4AdABlAHIAbgBhAHQAaQBvAG4AYQBsAC4ASwBhAGwAcAB1AHIAdQBzAGgAUgBlAGcAdQBsAGEAcgBBAFYAUgBPADoAIABLAGEAbABwAHUAcgB1AHMAaABWAGUAcgBzAGkAbwBuACAAMAAuADIANQA4AAAAAwAAAAAAAP7NABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMACAACABAAAf//AAMAAQAAAAwAAAAAAAAAAQAAAAIAAQABAAAAAQAAAAoADAAOAAAAAAAAAAEAAAAKABwAHgACYmVuZwAOYm5nMgAOAAAAAAAAAAA=") format("truetype");
+        unicode-range: U+09E7;
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -53,6 +66,7 @@
         height: 100%;
         max-width: 100vw;
         max-height: 100vh;
+        max-height: 100dvh;
         overflow: hidden;
       }
 
@@ -144,6 +158,7 @@
         top: 0;
         right: 0;
         height: 100%;
+        height: 100dvh; /* mobile browsers: exclude the hidden-toolbar area */
         width: min(300px, 82vw);
         background: #101c31;
         border-left: 1px solid var(--panel-border);
@@ -153,8 +168,17 @@
         z-index: 400;
         display: flex;
         flex-direction: column;
-        padding: 22px 18px;
+        /* extra bottom room so the last item clears browser toolbars */
+        padding: 22px 18px calc(env(safe-area-inset-bottom) + 90px);
         gap: 6px;
+        /* many menu items: let the menu scroll instead of cutting them off */
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .drawer > * {
+        flex-shrink: 0;
       }
 
       .drawer.open {
@@ -255,14 +279,6 @@
         display: flex;
       }
 
-      .advanced-only-controls {
-        display: contents;
-      }
-
-      .controls-container.simple-mode .advanced-only-controls {
-        display: none;
-      }
-
       .control-group {
         display: flex;
         align-items: center;
@@ -353,6 +369,7 @@
       .tabs {
         width: 100%;
         display: none;
+        flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
         padding: 10px 16px;
@@ -383,10 +400,8 @@
           border-color 0.2s ease;
       }
 
+      /* সব ট্যাবের রঙ এক; সক্রিয় ট্যাব শুধু মোটা অক্ষরে বোঝা যায় */
       .tab-btn.active {
-        background: rgba(96, 201, 230, 0.12);
-        border-color: rgba(96, 201, 230, 0.35);
-        color: var(--accent-blue);
         font-weight: 700;
       }
 
@@ -403,6 +418,27 @@
         }
         #letter-display.word-mode {
           font-size: min(14vh, 96px);
+        }
+      }
+
+      /* Arabic word (اَللّٰهُ) inside a tab label */
+      .tab-btn .ar {
+        font-family: "IIMArabic", serif;
+        font-size: 1.3em;
+        line-height: 1;
+        vertical-align: middle;
+      }
+
+      /* Mobile: compact tab buttons so three tabs fit in one row */
+      @media (max-width: 600px) {
+        .tabs {
+          gap: 6px;
+          padding: 8px 10px;
+        }
+        .tab-btn {
+          padding: 7px 10px;
+          font-size: 13.5px;
+          white-space: nowrap;
         }
       }
 
@@ -579,10 +615,16 @@
       <div class="drawer-item" data-page="class37">
         <span>৩৭তম ক্লাস</span>
       </div>
+      <div class="drawer-item" data-page="class41">
+        <span>৪১তম ক্লাস</span>
+      </div>
+      <div class="drawer-item" data-page="class42">
+        <span>৪২তম ক্লাস</span>
+      </div>
     </nav>
 
-    <!-- Letter range controls are shared; other filters are for murakkab only -->
-    <div class="controls-container visible simple-mode" id="controls-container">
+    <!-- Position filter / range controls: only shown on "advanced" page -->
+    <div class="controls-container" id="controls-container">
       <div class="control-group">
         <label for="start-letter">শুরু:</label>
         <select id="start-letter"></select>
@@ -593,28 +635,26 @@
         <select id="end-letter"></select>
       </div>
 
-      <div class="advanced-only-controls">
-        <div class="control-group">
-          <label for="position-filter">অবস্থান:</label>
-          <select id="position-filter">
-            <option value="all">সব অবস্থান (All)</option>
-            <option value="initial">শুরুর অবস্থান (Initial)</option>
-            <option value="medial">মাঝের অবস্থান (Medial)</option>
-            <option value="final">শেষের অবস্থান (Final)</option>
-          </select>
-        </div>
+      <div class="control-group">
+        <label for="position-filter">অবস্থান:</label>
+        <select id="position-filter">
+          <option value="all">সব অবস্থান (All)</option>
+          <option value="initial">শুরুর অবস্থান (Initial)</option>
+          <option value="medial">মাঝের অবস্থান (Medial)</option>
+          <option value="final">শেষের অবস্থান (Final)</option>
+        </select>
+      </div>
 
-        <div class="control-group">
-          <label for="count-select">একসাথে হরফ:</label>
-          <select id="count-select">
-            <option value="1">১টি</option>
-            <option value="2">২টি</option>
-            <option value="3">৩টি</option>
-            <option value="4">৪টি</option>
-            <option value="5">৫টি</option>
-            <option value="6">৬টি</option>
-          </select>
-        </div>
+      <div class="control-group">
+        <label for="count-select">একসাথে হরফ:</label>
+        <select id="count-select">
+          <option value="1">১টি</option>
+          <option value="2">২টি</option>
+          <option value="3">৩টি</option>
+          <option value="4">৪টি</option>
+          <option value="5">৫টি</option>
+          <option value="6">৬টি</option>
+        </select>
       </div>
     </div>
 
@@ -622,6 +662,24 @@
     <div class="tabs" id="class30-tabs">
       <button class="tab-btn active" data-tab="letters">লীনের হরফ</button>
       <button class="tab-btn" data-tab="words">আরজি সাকিনের শব্দ</button>
+    </div>
+
+    <!-- Tab view: only shown on the 41st class page -->
+    <div class="tabs" id="class41-tabs">
+      <button class="tab-btn active" data-tab="halqi">ইজহারে হালক্বী</button>
+      <button class="tab-btn" data-tab="mutlaq">ইজহারে মুতলাক</button>
+      <button class="tab-btn" data-tab="shafawi">ইজহারে শাফাউয়ী</button>
+    </div>
+
+    <!-- Tab view: only shown on the 42nd class page -->
+    <div class="tabs" id="class42-tabs">
+      <button class="tab-btn active" data-tab="hamza">হামজা শাদীদাহ</button>
+      <button class="tab-btn" data-tab="thick">
+        <span class="ar">اَللّٰهُ</span> মোটা করে পড়া
+      </button>
+      <button class="tab-btn" data-tab="thin">
+        <span class="ar">اَللّٰهُ</span> পাতলা করে পড়া
+      </button>
     </div>
 
     <!-- Main Display Area (shared by both pages) -->
@@ -841,6 +899,9 @@
       const countSelect = document.getElementById("count-select");
       const class30Tabs = document.getElementById("class30-tabs");
       const tabBtns = class30Tabs.querySelectorAll(".tab-btn");
+      const class41Tabs = document.getElementById("class41-tabs");
+      const tabBtns41 = class41Tabs.querySelectorAll(".tab-btn");
+      const class42Tabs = document.getElementById("class42-tabs");
 
       let currentPage = "simple"; // "simple" | "advanced" | "class17" | "class28"
 
@@ -872,6 +933,8 @@
         currentPage = page;
         displayDiv.style.fontSize = ""; // reset size set by multi-letter mode
         class30Tabs.classList.toggle("visible", page === "class30");
+        class41Tabs.classList.toggle("visible", page === "class41");
+        class42Tabs.classList.toggle("visible", page === "class42");
         displayDiv.classList.toggle(
           "word-mode",
           page === "class17" ||
@@ -885,11 +948,13 @@
             page === "class31" ||
             page === "class33" ||
             page === "class35" ||
-            page === "class37",
+            page === "class37" ||
+            page === "class41" ||
+            page === "class42",
         );
         if (page === "simple") {
           topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
-          controlsContainer.classList.add("visible", "simple-mode");
+          controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           simple.reset();
         } else if (page === "class25") {
@@ -922,6 +987,16 @@
           controlsContainer.classList.remove("visible");
           questionBox.classList.remove("visible");
           class29.reset();
+        } else if (page === "class42") {
+          topbarTitle.textContent = "হামজা শাদীদাহ ও আল্লাহ";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          class42.select("hamza");
+        } else if (page === "class41") {
+          topbarTitle.textContent = "ইজহার";
+          controlsContainer.classList.remove("visible");
+          questionBox.classList.remove("visible");
+          selectTab41("halqi");
         } else if (page === "class37") {
           topbarTitle.textContent = "ইখফা গুন্নাহ";
           controlsContainer.classList.remove("visible");
@@ -954,7 +1029,6 @@
           class28.reset();
         } else {
           topbarTitle.textContent = "মুরাক্কাব ভিউয়ার | Pro";
-          controlsContainer.classList.remove("simple-mode");
           controlsContainer.classList.add("visible");
           questionBox.classList.add("visible");
           advanced.reset();
@@ -1002,15 +1076,8 @@
         let history = [];
         let index = -1;
 
-        function getSelectedLetters() {
-          let startIdx = parseInt(startSelect.value);
-          let endIdx = parseInt(endSelect.value);
-          if (startIdx > endIdx) [startIdx, endIdx] = [endIdx, startIdx];
-          return arabicLetters.slice(startIdx, endIdx + 1);
-        }
-
         function reset() {
-          pool = shuffleArray(getSelectedLetters());
+          pool = shuffleArray(arabicLetters);
           history = [];
           index = -1;
           next();
@@ -1023,7 +1090,7 @@
             renderLetter(item.name, item.color, "right");
             return;
           }
-          if (pool.length === 0) pool = shuffleArray(getSelectedLetters());
+          if (pool.length === 0) pool = shuffleArray(arabicLetters);
           const item = pool.pop();
           history.push(item);
           index++;
@@ -1144,13 +1211,8 @@
           }
         }
 
-        function resetCurrentViewer() {
-          if (currentPage === "simple") simple.reset();
-          else reset();
-        }
-
-        startSelect.addEventListener("change", resetCurrentViewer);
-        endSelect.addEventListener("change", resetCurrentViewer);
+        startSelect.addEventListener("change", reset);
+        endSelect.addEventListener("change", reset);
         positionSelect.addEventListener("change", reset);
         countSelect.addEventListener("change", () => {
           // position filter only applies when showing a single letter
@@ -1375,6 +1437,89 @@
         "نَوْحٍ", "ثَوْبٍ", "لَوْحٍ",
       ].map(withWaqf));
 
+      // 41st class – Izhar, three tabs (each with its own random viewer)
+      const class41Viewers = {
+        halqi: createWordViewer([
+          "مَنْ اٰمَنَ", "مِنْهُمْ", "عَزِيْزٌ حَكِيْمٌ", "مَنْ خَفَّتْ",
+          "أَنْعَمْتَ", "مِنْ غِلٍّ", "عَذَابٌ عَظِيْمٌ", "إِنْ هُوَ",
+        ]),
+        mutlaq: createWordViewer([
+          "اَلدُّنْيَا", "بُنْيَانٌ", "قِنْوَانٌ", "صِنْوَانٌ",
+          "بُنْيَانَهُمْ", "صِنْوَانٍ", "بُنْيَانَهُ", "دُنْيَاهُمْ",
+        ]),
+        shafawi: createWordViewer([
+          "اَلْحَمْدُ", "أَلَمْ تَرَ", "أَلَمْ يَجْعَلْ", "لَمْ يَلِدْ",
+          "وَلَمْ يُوْلَدْ", "لَكُمْ دِيْنُكُمْ", "لَهُمْ فِيْهَا", "أَنْتُمْ عَابِدُوْنَ",
+        ]),
+      };
+      const class41 = (() => {
+        let active = class41Viewers.halqi;
+        return {
+          setTab(name) {
+            active = class41Viewers[name] || class41Viewers.halqi;
+            active.reset();
+          },
+          reset() {
+            active.reset();
+          },
+          next() {
+            active.next();
+          },
+          prev() {
+            active.prev();
+          },
+        };
+      })();
+
+      function selectTab41(name) {
+        tabBtns41.forEach((b) =>
+          b.classList.toggle("active", b.dataset.tab === name),
+        );
+        class41.setTab(name);
+      }
+      tabBtns41.forEach((b) =>
+        b.addEventListener("click", () => selectTab41(b.dataset.tab)),
+      );
+
+      // Reusable tab page: one random viewer per tab
+      function createTabbedPage(tabsEl, viewers) {
+        const btns = tabsEl.querySelectorAll(".tab-btn");
+        let active = Object.values(viewers)[0];
+        function select(name) {
+          btns.forEach((b) =>
+            b.classList.toggle("active", b.dataset.tab === name),
+          );
+          active = viewers[name] || Object.values(viewers)[0];
+          active.reset();
+        }
+        btns.forEach((b) =>
+          b.addEventListener("click", () => select(b.dataset.tab)),
+        );
+        return {
+          select,
+          reset: () => active.reset(),
+          next: () => active.next(),
+          prev: () => active.prev(),
+        };
+      }
+
+      // 42nd class – Hamza, Allah (thick) and Allah (thin), three tabs
+      const class42 = createTabbedPage(class42Tabs, {
+        hamza: createWordViewer([
+          "مُؤْمِنُوْنَ", "بِئْسَ", "جِئْتَ", "مُؤْصَدَةٌ",
+          "يَأْكُلُوْنَ", "تُؤْوِيْ", "اَلْبَأْسِ", "يَأْمُرُوْنَ",
+        ]),
+        thick: createWordViewer([
+          "اَللّٰهُ اَكْبَرُ", "رَسُوْلُ اللّٰهِ", "وَمَا اللّٰهُ", "قُلْ هُوَ اللّٰهُ",
+          "أَسْتَغْفِرُ اللّٰهَ", "سُبْحَانَ اللّٰهِ", "إِنَّ اللّٰهَ", "نَصْرُ اللّٰهِ",
+        ]),
+        thin: createWordViewer([
+          "بِسْمِ اللّٰهِ", "أَعُوْذُ بِاللّٰهِ", "الْحَمْدُ لِلّٰهِ", "فِيْ دِيْنِ اللّٰهِ",
+          "إِنَّا لِلّٰهِ", "مِنْ دُوْنِ اللّٰهِ", "مِنْ عِنْدِ اللّٰهِ", "فِيْ سَبِيْلِ اللّٰهِ",
+          "بِإِذْنِ اللّٰهِ", "اٰیٰتِ اللّٰهِ", "أَمْرِ اللّٰهِ", "قُلِ اللّٰهُمَّ",
+        ]),
+      });
+
       // ==========================================================
       // Shared swipe + keyboard navigation, routed to active page
       // ==========================================================
@@ -1387,6 +1532,8 @@
         if (currentPage === "class22") return class22;
         if (currentPage === "class24") return class24;
         if (currentPage === "class25") return class25;
+        if (currentPage === "class41") return class41;
+        if (currentPage === "class42") return class42;
         if (currentPage === "simple") return simple;
         if (currentPage === "class30") return class30;
         if (currentPage === "class29") return class29;
