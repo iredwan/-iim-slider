@@ -279,6 +279,11 @@
         display: flex;
       }
 
+      /* হরফ স্লাইডারে শুধু শুরু/শেষ দেখায়; অবস্থান ও "একসাথে হরফ" শুধু মুরাক্কাবে */
+      .controls-container.range-only .adv-only {
+        display: none;
+      }
+
       .control-group {
         display: flex;
         align-items: center;
@@ -635,7 +640,7 @@
         <select id="end-letter"></select>
       </div>
 
-      <div class="control-group">
+      <div class="control-group adv-only">
         <label for="position-filter">অবস্থান:</label>
         <select id="position-filter">
           <option value="all">সব অবস্থান (All)</option>
@@ -645,7 +650,7 @@
         </select>
       </div>
 
-      <div class="control-group">
+      <div class="control-group adv-only">
         <label for="count-select">একসাথে হরফ:</label>
         <select id="count-select">
           <option value="1">১টি</option>
@@ -954,7 +959,7 @@
         );
         if (page === "simple") {
           topbarTitle.textContent = "২৯ হরফ ভিউয়ার";
-          controlsContainer.classList.remove("visible");
+          controlsContainer.classList.add("visible", "range-only");
           questionBox.classList.remove("visible");
           simple.reset();
         } else if (page === "class25") {
@@ -1029,6 +1034,7 @@
           class28.reset();
         } else {
           topbarTitle.textContent = "মুরাক্কাব ভিউয়ার | Pro";
+          controlsContainer.classList.remove("range-only");
           controlsContainer.classList.add("visible");
           questionBox.classList.add("visible");
           advanced.reset();
@@ -1071,13 +1077,23 @@
       // ==========================================================
       // Page 1: Simple 29-letter viewer
       // ==========================================================
+      // Letters between the "শুরু" and "শেষ" selections (shared by both pages)
+      function selectedLetters() {
+        let a = parseInt(startSelect.value);
+        let b = parseInt(endSelect.value);
+        if (isNaN(a)) a = 0;
+        if (isNaN(b)) b = arabicLetters.length - 1;
+        if (a > b) [a, b] = [b, a];
+        return arabicLetters.slice(a, b + 1);
+      }
+
       const simple = (() => {
         let pool = [];
         let history = [];
         let index = -1;
 
         function reset() {
-          pool = shuffleArray(arabicLetters);
+          pool = shuffleArray(selectedLetters());
           history = [];
           index = -1;
           next();
@@ -1090,7 +1106,7 @@
             renderLetter(item.name, item.color, "right");
             return;
           }
-          if (pool.length === 0) pool = shuffleArray(arabicLetters);
+          if (pool.length === 0) pool = shuffleArray(selectedLetters());
           const item = pool.pop();
           history.push(item);
           index++;
@@ -1211,8 +1227,11 @@
           }
         }
 
-        startSelect.addEventListener("change", reset);
-        endSelect.addEventListener("change", reset);
+        // শুরু/শেষ দুই পেজেই চলে, তাই যে পেজ খোলা সেটাই রিসেট হবে
+        const resetCurrent = () =>
+          currentPage === "simple" ? simple.reset() : reset();
+        startSelect.addEventListener("change", resetCurrent);
+        endSelect.addEventListener("change", resetCurrent);
         positionSelect.addEventListener("change", reset);
         countSelect.addEventListener("change", () => {
           // position filter only applies when showing a single letter
@@ -1606,7 +1625,7 @@
       // ==========================================================
       // App start
       // ==========================================================
-      simple.reset();
+      switchPage("simple");
     </script>
   </body>
 </html>
